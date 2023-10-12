@@ -5,32 +5,30 @@ class Participant extends Sequelize.Model {}
 
 Participant.init(
   {
-    id: {
-      type: Sequelize.DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: false, // Asegura que no sea nulo
-
-    },
     name: {
       type: Sequelize.DataTypes.STRING,
+      allowNull: true,
     },
     lastname: {
       type: Sequelize.DataTypes.STRING,
+      allowNull: true,
     },
     email: {
       type: Sequelize.DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     phone: {
       type: Sequelize.DataTypes.STRING,
+      allowNull: true,
     },
     amountPaid: {
       type: Sequelize.DataTypes.FLOAT,
+      allowNull: false,
     },
   },
   {
     sequelize: db,
-    modelName: "participant", // Nombre del modelo en la base de datos
+    modelName: 'participant', // Nombre del modelo en la base de datos
   }
 );
 

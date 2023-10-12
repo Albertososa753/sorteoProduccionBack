@@ -1,13 +1,11 @@
 const mercadopago = require("mercadopago");
 const { Participant } = require("../model");
+const { HOST, MERCADOPAGO_API_KEY } = require("../../config");
 
-// Controlador para crear una orden
-exports.createOrder = async function (req, res) {
+exports.createAnOrder = async function (req, res) {
   mercadopago.configure({
-    access_token:
-      "TEST-4652017139929379-101100-ef12c12813d43190ca9c41583b31b597-1508340502",
+    access_token: MERCADOPAGO_API_KEY,
   });
-
   const result = await mercadopago.preferences.create({
     items: [
       {
@@ -18,49 +16,147 @@ exports.createOrder = async function (req, res) {
       },
     ],
     back_urls: {
-      success: "http://localhost:4001/api/mp/success",
-      failure: "http://localhost:4001/api/mp/failure",
-      pending: "http://localhost:4001/api/mp/pending",
+      success: `${HOST}/success`,
+      failure: `${HOST}/failure`,
+      pending: `${HOST}/penging`,
     },
-    notification_url: "https://18ee-186-124-45-83.ngrok.io/api/mp/webhook",
+    notification_url: "https://e2b6-186-124-45-83.ngrok.io/api/mp/webhook",
   });
-
-  console.log(result);
+  res.send(result.body);
+};
+exports.createThreeOrders = async function (req, res) {
+  mercadopago.configure({
+    access_token: MERCADOPAGO_API_KEY,
+  });
+  const result = await mercadopago.preferences.create({
+    items: [
+      {
+        title: "calco",
+        unit_price: 100,
+        currency_id: "ARS",
+        quantity: 3,
+      },
+    ],
+    back_urls: {
+      success: `${HOST}/success`,
+      failure: `${HOST}/failure`,
+      pending: `${HOST}/penging`,
+    },
+    notification_url: "https://e2b6-186-124-45-83.ngrok.io/api/mp/webhook",
+  });
+  res.send(result.body);
+};
+exports.createFiveOrders = async function (req, res) {
+  mercadopago.configure({
+    access_token: MERCADOPAGO_API_KEY,
+  });
+  const result = await mercadopago.preferences.create({
+    items: [
+      {
+        title: "calco",
+        unit_price: 100,
+        currency_id: "ARS",
+        quantity: 5,
+      },
+    ],
+    back_urls: {
+      success: `${HOST}/success`,
+      failure: `${HOST}/failure`,
+      pending: `${HOST}/penging`,
+    },
+    notification_url: "https://e2b6-186-124-45-83.ngrok.io/api/mp/webhook",
+  });
+  res.send(result.body);
+};
+exports.createTenOrders = async function (req, res) {
+  mercadopago.configure({
+    access_token: MERCADOPAGO_API_KEY,
+  });
+  const result = await mercadopago.preferences.create({
+    items: [
+      {
+        title: "calco",
+        unit_price: 100,
+        currency_id: "ARS",
+        quantity: 10,
+      },
+    ],
+    back_urls: {
+      success: `${HOST}/success`,
+      failure: `${HOST}/failure`,
+      pending: `${HOST}/penging`,
+    },
+    notification_url: "https://e2b6-186-124-45-83.ngrok.io/api/mp/webhook",
+  });
   res.send(result.body);
 };
 
 exports.receiveWebHook = async function (req, res) {
   const payment = req.query;
+  let createdParticipant;
   try {
     if (payment.type === "payment") {
       const data = await mercadopago.payment.findById(payment["data.id"]);
-      console.log('aaaaaaaaaaaaaaaaaaaaaaaaa333333333333333333333333',data)
+
+      const quantity = Number(data.body.additional_info.items[0].quantity);
       const newParticipant = {
-        id: data.body.payer.id, 
-        name: 'data.payer.name',
-        lastname: 'data.payer.surname',
+        name: "el beto",
+        lastname: "sosa",
         email: data.response.payer.email,
-        phone: 33647432423,
+        phone: 337432423,
         amountPaid: 100,
       };
 
-      // Crea una instancia de 'Participant' y guárdala en la base de datos
-      const createdParticipant = await Participant.create(newParticipant);
-
-      return res.status(201).json({
-        message: "Participante creado exitosamente",
-        participant: createdParticipant,
-      });
+      if (data.body.status === "approved") {
+        for (let i = 0; i < quantity; i++) {
+          createdParticipant = await Participant.create(newParticipant);
+        }
+        return res.status(201).json({
+          message: "Participantes creados exitosamente",
+          participants: createdParticipant,
+        });
+      }
     }
 
     res.sendStatus(204);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
+exports.raffleParticipants = async function (req, res) {
+  try {
+    const participants = await Participant.findAll();
 
-exports.addParticipants = async (req,res)=>{
-  console.log(req.doby)
-}
+    if (participants.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No hay participantes en la base de datos." });
+    }
+    const randomIndex = Math.floor(Math.random() * participants.length);
+    const selectedParticipant = participants[randomIndex];
+
+    return res.status(200).json({
+      message: "Participante seleccionado al azar:",
+      participant: selectedParticipant,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteAllParticipants = async function (req, res) {
+  try {
+    const result = await Participant.destroy({
+      where: {},
+    });
+    res
+      .status(201)
+      .json({ message: "Todos los participantes han sido eliminados." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};

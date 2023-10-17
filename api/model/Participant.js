@@ -1,35 +1,35 @@
-const Sequelize = require("sequelize");
-const db = require("../config/db");
+import { DataTypes, Model } from "sequelize";
+import db from "../config/db.js";
 
-class Participant extends Sequelize.Model {}
+class Participant extends Model {}
 
 Participant.init(
   {
     name: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     lastname: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     email: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     phone: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: true,
     },
-    amountPaid: {
-      type: Sequelize.DataTypes.FLOAT,
+    quantityBought: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
   {
     sequelize: db,
-    modelName: 'participant', // Nombre del modelo en la base de datos
+    modelName: "participant",
   }
 );
 
-module.exports = Participant;
+export default Participant;

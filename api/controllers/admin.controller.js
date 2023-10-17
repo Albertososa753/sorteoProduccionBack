@@ -1,13 +1,13 @@
-const Admin = require("../model");
-const { generateToken } = require("../auth/tokens");
+import { Admin } from "../model/index.js";
+import { generateToken } from "../auth/tokens.js";
 
-exports.registerAdmin = (req, res) => {
+export const registerAdmin = (req, res) => {
   Admin.create(req.body).then((admin) => {
     res.send(admin).status(201);
   });
 };
 
-exports.loginAdmin = (req, res) => {
+export const loginAdmin = (req, res) => {
   const { email, password } = req.body;
 
   Admin.findOne({ where: { email } }).then((admin) => {
@@ -28,11 +28,11 @@ exports.loginAdmin = (req, res) => {
   });
 };
 
-exports.meAdmin = (req, res) => {
+export const meAdmin = (req, res) => {
   res.send(req.user);
 };
 
-exports.logoutAdmin = (req, res) => {
+export const logoutAdmin = (req, res) => {
   res.clearCookie("token");
   res.sendStatus(204);
 };

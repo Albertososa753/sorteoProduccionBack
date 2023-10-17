@@ -1,3 +1,5 @@
-const Admin = require("./Admin");
-const Participant = require("./Participant")
-module.exports = {Admin ,Participant};
+import Admin from "./Admin.js";
+import Participant from "./Participant.js";
+import AccumulatedNumbers from "./AccumulatedNumbers.js";
+
+export { Admin, Participant, AccumulatedNumbers };

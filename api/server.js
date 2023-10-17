@@ -1,12 +1,12 @@
-const express = require("express");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
-const db = require("./config/db");
-const routes = require("./routes");
-const models = require("./model");
-const cors = require("cors");
-const { PORT } = require("../config");
+import db from "./config/db.js";
+import routes from "./routes/index.js"; 
+import { Admin, Participant, AccumulatedNumbers } from "./model/index.js";
+import cors from "cors";
+import { PORT } from "../config.js";
 const app = express();
 
 app.use(

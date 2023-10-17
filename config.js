@@ -1,6 +1,6 @@
-const {config} = require('dotenv')
-config()
+import { config } from 'dotenv';
+config();
 
-exports.PORT = 4001;
-exports.HOST = `http://localhost:${exports.PORT}`;
-exports.MERCADOPAGO_API_KEY = process.env.MERCADOPAGO_API_KEY;
+export const PORT = 4001;
+export const HOST = `http://localhost:${PORT}`;
+export const MERCADOPAGO_API_KEY = process.env.MERCADOPAGO_API_KEY;

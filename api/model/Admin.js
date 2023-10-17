@@ -1,34 +1,34 @@
-const Sequelize = require("sequelize");
-const db = require("../config/db");
-const bcrypt = require("bcrypt");
-class Admin extends Sequelize.Model {
+import { Model, DataTypes } from "sequelize";
+import db from "../config/db.js";
+import bcrypt from "bcrypt";
+
+class Admin extends Model {
   hash(password, salt) {
     return bcrypt.hash(password, salt);
   }
+
   validatePassword(password) {
     return this.hash(password, this.salt).then((newHash) => {
       return newHash === this.password;
     });
   }
 }
+
 Admin.init(
   {
     name: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
-
     password: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
-
     salt: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
     },
-
     email: {
-      type: Sequelize.DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         isEmail: true,
@@ -48,4 +48,5 @@ Admin.beforeCreate((admin) => {
     admin.password = hash;
   });
 });
-module.exports = Admin;
+
+export default Admin;

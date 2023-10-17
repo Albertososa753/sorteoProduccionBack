@@ -1,12 +1,12 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+
 const SECRET = "agente007";
 
-const generateToken = (payload) => {
+export const generateToken = (payload) => {
   const token = jwt.sign({ user: payload }, SECRET, { expiresIn: "5d" });
   return token;
 };
-const validateToken = (token) => {
+
+export const validateToken = (token) => {
   return jwt.verify(token, SECRET);
 };
-
-module.exports = { generateToken, validateToken };

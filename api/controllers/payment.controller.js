@@ -116,7 +116,6 @@ export const receiveWebHook = async (req, res) => {
       const acummMoney = Number(
         data.response.transaction_details.net_received_amount
       );
-      console.log(acummMoney, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassss");
       const newParticipant = {
         name: "beto",
         lastname: "sdasdasdsadsadsa",

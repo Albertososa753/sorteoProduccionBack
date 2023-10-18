@@ -2,7 +2,6 @@ import { AccumulatedNumbers } from "../model/index.js";
 
 export const updateAccumulatedNumbers = async (req, res) => {
   try {
-    console.log(req.body.acummMoney, "bodyyyyyyyyyyyyyyyyyyyyyyyy");
     const { acummMoney } = req.body;
     let accumulatedNumbers = await AccumulatedNumbers.findOne();
 

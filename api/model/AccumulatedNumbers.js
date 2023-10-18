@@ -6,7 +6,7 @@ class AccumulatedNumbers extends Model {}
 AccumulatedNumbers.init(
   {
     total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
   },

@@ -2,14 +2,15 @@ import { AccumulatedNumbers } from "../model/index.js";
 
 export const updateAccumulatedNumbers = async (req, res) => {
   try {
-    const { quantity } = req.body;
+    console.log(req.body.acummMoney, "bodyyyyyyyyyyyyyyyyyyyyyyyy");
+    const { acummMoney } = req.body;
     let accumulatedNumbers = await AccumulatedNumbers.findOne();
 
     if (!accumulatedNumbers) {
       accumulatedNumbers = new AccumulatedNumbers({ total: 0 });
     }
 
-    accumulatedNumbers.total += quantity;
+    accumulatedNumbers.total += acummMoney;
 
     await accumulatedNumbers.save();
 

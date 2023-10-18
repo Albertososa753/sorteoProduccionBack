@@ -1,11 +1,12 @@
 import mercadopago from "mercadopago";
 import { Participant } from "../model/index.js";
-import { HOST, MERCADOPAGO_API_KEY } from "../../config.js";
-import fetch from "node-fetch"; 
+import { HOST, MERCADOPAGO_API_KEY, NGROK } from "../../config.js";
+import fetch from "node-fetch";
 
 export const getAllParticipants = async (req, res) => {
   try {
     const participants = await Participant.findAll();
+    console.log(NGROK);
     res.status(200).json(participants);
   } catch (error) {
     console.log(error);
@@ -31,7 +32,7 @@ export const createAnOrder = async (req, res) => {
       failure: `${HOST}/failure`,
       pending: `${HOST}/penging`,
     },
-    notification_url: "https://0672-186-124-45-83.ngrok.io/api/mp/webhook",
+    notification_url: `${NGROK}/api/mp/webhook`,
   });
   res.send(result.body);
 };
@@ -54,7 +55,7 @@ export const createThreeOrders = async (req, res) => {
       failure: `${HOST}/failure`,
       pending: `${HOST}/penging`,
     },
-    notification_url: "https://0672-186-124-45-83.ngrok.io/api/mp/webhook",
+    notification_url: `${NGROK}/api/mp/webhook`,
   });
   res.send(result.body);
 };
@@ -77,7 +78,7 @@ export const createFiveOrders = async (req, res) => {
       failure: `${HOST}/failure`,
       pending: `${HOST}/penging`,
     },
-    notification_url: "https://0672-186-124-45-83.ngrok.io/api/mp/webhook",
+    notification_url: `${NGROK}/api/mp/webhook`,
   });
   res.send(result.body);
 };
@@ -100,7 +101,7 @@ export const createTenOrders = async (req, res) => {
       failure: `${HOST}/failure`,
       pending: `${HOST}/penging`,
     },
-    notification_url: "https://0672-186-124-45-83.ngrok.io/api/mp/webhook",
+    notification_url: `${NGROK}/api/mp/webhook`,
   });
   res.send(result.body);
 };
@@ -111,8 +112,11 @@ export const receiveWebHook = async (req, res) => {
   try {
     if (payment.type === "payment") {
       const data = await mercadopago.payment.findById(payment["data.id"]);
-
       const quantity = Number(data.body.additional_info.items[0].quantity);
+      const acummMoney = Number(
+        data.response.transaction_details.net_received_amount
+      );
+      console.log(acummMoney, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassss");
       const newParticipant = {
         name: "beto",
         lastname: "sdasdasdsadsadsa",
@@ -120,14 +124,14 @@ export const receiveWebHook = async (req, res) => {
         phone: 337432423,
         quantityBought: quantity,
       };
-      await fetch(`${HOST}/api/acummNum/update-accumulated-numbers`, {
-        method: "POST",
-        body: JSON.stringify({ quantity }),
-        headers: { "Content-Type": "application/json" },
-      });
-
+      
       if (data.body.status === "approved") {
         createdParticipant = await Participant.create(newParticipant);
+         fetch(`${HOST}/api/acummNum/update-accumulated-numbers`, {
+          method: "POST",
+          body: JSON.stringify({ acummMoney }),
+          headers: { "Content-Type": "application/json" },
+        }); 
         return res.status(201).json({
           message: "Participante creado exitosamente",
           participants: createdParticipant,

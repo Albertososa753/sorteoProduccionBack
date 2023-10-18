@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 import db from "./config/db.js";
-import routes from "./routes/index.js"; 
+import routes from "./routes/index.js";
 import { Admin, Participant, AccumulatedNumbers } from "./model/index.js";
 import cors from "cors";
 import { PORT } from "../config.js";
